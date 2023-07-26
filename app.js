@@ -7,41 +7,88 @@ require('dotenv').config();
 const Configuration = require("openai").Configuration;
 const OpenAIApi = require("openai").OpenAIApi;
 
+// lists of artists and nouns to pull from
+const artists = ["Vincent van Gogh", "Salvador Dali", "Leonardo da Vinci"];
+const nouns = ["clown", "house", "shoe"];
+
+// initialize the app
 const app = express();
+
+// set the app's view engine to ejs
 app.set('view engine', 'ejs');
+// Allow the app to parse the bodies of res's
 app.use(bodyParser.urlencoded({extended: true}));
+// give access to static files such as stylesheets
 app.use(express.static("public"));
 
-var output = "";
+// Empty string to contain the output from AI
+var output = "..\public\images\cow-walking.gif";
+var spendTwoCents = 0;
 
-function generatePrompt(adjective) {
-    return "Write me a short" + adjective + " poem.";
+
+// Creat the prompt given an adjective
+function generatePrompt() {
+    const artist = artists[Math.floor(Math.random()*artists.length)];
+    const noun = nouns[Math.floor(Math.random()*artists.length)];
+
+    return artist + " painting of a " + noun;
 }
 
+// new object to pass when creating an instance
+// of the API. It contains information
+// such as the API key.
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+// creat an instance of the API
 const openai = new OpenAIApi(configuration);
 
+// root route
 app.get("/", function(req, res) {
     res.render("home", {
-        output: output
+
     });
 });
 
+app.get("/image", function(req, res) {
+    res.render("image", {
+        output: output,
+        nouns: nouns,
+        artists: artists,
+    });
+});
+
+// what to do upon post request from root
+// must be an asynchronous function to account
+// for response from API.
 app.post("/", async function(req, res) {
-    console.log(req.body.adjective);
-    const adjective = req.body.adjective;
+    // console.log(req.body.adjective);
+    // // extract the given adjective using bodyParser
+    // const adjective = req.body.adjective;
 
-    const completion = await openai.createCompletion({
-        model: "text-curie-001",
-        prompt: generatePrompt(adjective),
-        temperature: 0.6,
-        max_tokens: 64,
-      });
-    output = completion.data.choices[0].text;
+    // // call the API given the prompt & other 
+    // // options. Store response in an object.
+    // const completion = await openai.createCompletion({
+    //     model: "text-curie-001",
+    //     prompt: generatePrompt(adjective),
+    //     temperature: 0.6,
+    //     max_tokens: 64,
+    //   });
+    // // change the value for the output string
+    // output = completion.data.choices[0].text;
 
-    res.redirect("/");
+    if (spendTwoCents) {
+        const response = await openai.createImage({
+            prompt: generatePrompt(),
+            n: 1,
+            size: "256x256",
+        });
+        output = response.data.data[0].url;
+        console.log(output);
+    }
+
+    // redirect to root, where output should now show
+    res.redirect("/image");
 });
 
 app.listen(3000, function() {

@@ -1,0 +1,24 @@
+<%- include("header"); %>
+
+<img src=<%= output %>>
+
+<h1>What prompt made this image?</h1>
+
+<!-- const artists = ["Vincent van Gogh", "Salvador Dali", "Leonardo da Vinci"]; -->
+<!-- <% const nouns = ["clown", "house", "shoe"]; %> -->
+
+<div class="answer">
+    <p>This is a
+    <select name="artist" required>
+        <option value="Vincent van Gogh">Vincent van Gogh</option>
+        <option value="Salvador Dali">Salvador Dali</option>
+        <option value="Leonardo da Vinci">Leonardo da Vinci</option>
+    </select>
+    painting of a
+    <select name="noun" required>
+        <% nouns.forEach(function(noun) { %>
+            <option value="<%= noun %>"><%= noun %></option>
+        <% }); %>
+    </select>
+    </p>
+</div>
