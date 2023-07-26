@@ -1,24 +1,31 @@
 <%- include("header"); %>
 
-<img src=<%= output %>>
 
-<h1>What prompt made this image?</h1>
+<div class="container">
+    <img src=<%= output %>>
 
-<!-- const artists = ["Vincent van Gogh", "Salvador Dali", "Leonardo da Vinci"]; -->
-<!-- <% const nouns = ["clown", "house", "shoe"]; %> -->
+    <h1>What prompt made this image?</h1>
 
-<div class="answer">
-    <p>This is a
-    <select name="artist" required>
-        <option value="Vincent van Gogh">Vincent van Gogh</option>
-        <option value="Salvador Dali">Salvador Dali</option>
-        <option value="Leonardo da Vinci">Leonardo da Vinci</option>
-    </select>
-    painting of a
-    <select name="noun" required>
-        <% nouns.forEach(function(noun) { %>
-            <option value="<%= noun %>"><%= noun %></option>
-        <% }); %>
-    </select>
-    </p>
+    <div class="answer">
+        <form action="/image" method="post">
+            <p>This is a
+            <select name="artist" required>
+                <option value="none" selected></option>
+                <% artists.forEach(function(artist) { %>
+                    <option value="<%= artist %>"><%= artist %></option>
+                <% }) %>
+            </select>
+            painting of a
+            <select name="noun" required>
+                <option value="none" selected></option>
+                <% nouns.forEach(function(noun) { %>
+                    <option value="<%= noun %>"><%= noun %></option>
+                <% }); %>
+            </select>
+            </p>
+            <button type="submit">GUESS</button>
+        </form>
+    </div>
+
+    <p><%= result %></p>
 </div>

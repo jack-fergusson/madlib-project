@@ -3,3 +3,27 @@
     flex-direction: row;
     justify-content: space-between;
 } */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+    background-color: rgb(86, 128, 86);
+    height: 5vh;
+    border-radius: 10%;
+    font-weight: 700;
+    color: white;
+}
+
+p {
+    font-size: larger;
+}

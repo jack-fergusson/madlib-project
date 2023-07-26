@@ -9,7 +9,7 @@ const OpenAIApi = require("openai").OpenAIApi;
 
 // lists of artists and nouns to pull from
 const artists = ["Vincent van Gogh", "Salvador Dali", "Leonardo da Vinci"];
-const nouns = ["clown", "house", "shoe"];
+const nouns = ["clown", "house", "shoe", "themself"];
 
 // initialize the app
 const app = express();
@@ -23,13 +23,16 @@ app.use(express.static("public"));
 
 // Empty string to contain the output from AI
 var output = "..\public\images\cow-walking.gif";
-var spendTwoCents = 0;
+var artist = "";
+var noun = "";
+var result = "";
+var spendTwoCents = 1;
 
 
 // Creat the prompt given an adjective
 function generatePrompt() {
-    const artist = artists[Math.floor(Math.random()*artists.length)];
-    const noun = nouns[Math.floor(Math.random()*artists.length)];
+    artist = artists[Math.floor(Math.random()*artists.length)];
+    noun = nouns[Math.floor(Math.random()*artists.length)];
 
     return artist + " painting of a " + noun;
 }
@@ -55,6 +58,7 @@ app.get("/image", function(req, res) {
         output: output,
         nouns: nouns,
         artists: artists,
+        result: result,
     });
 });
 
@@ -84,10 +88,19 @@ app.post("/", async function(req, res) {
             size: "256x256",
         });
         output = response.data.data[0].url;
-        console.log(output);
     }
 
     // redirect to root, where output should now show
+    res.redirect("/image");
+});
+
+app.post("/image", function(req, res) {
+    if (req.body.artist == artist && req.body.noun == noun) {
+        result = "Huzzah! You did it."
+    } else {
+        result = ("Sorry, Artist: " + artist + " Noun: " + noun);
+    }
+
     res.redirect("/image");
 });
 
