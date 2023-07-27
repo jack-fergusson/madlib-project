@@ -9,7 +9,7 @@ const OpenAIApi = require("openai").OpenAIApi;
 
 // lists of artists and nouns to pull from
 const artists = ["Vincent van Gogh", "Salvador Dali", "Leonardo da Vinci"];
-const nouns = ["clown", "house", "shoe", "themself"];
+const nouns = ["a clown", "a house", "a shoe", "themself"];
 
 // initialize the app
 const app = express();
@@ -26,7 +26,7 @@ var output = "..\public\images\cow-walking.gif";
 var artist = "";
 var noun = "";
 var result = "";
-var spendTwoCents = 1;
+var spendTwoCents = 0;
 
 
 // Creat the prompt given an adjective
