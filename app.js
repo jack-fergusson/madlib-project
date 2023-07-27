@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 require('dotenv').config();
+// ADDED TO FIT HEROKU LEARN ABOUT THIS
 const path = require('path');
 
 // hosting services wont have same port as you
@@ -24,7 +25,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 // give access to static files such as stylesheets
 app.use(express.static(path.join(__dirname, "public")));
-
+// WHAT IS THIS??? LEARN
 app.set('views', path.join(__dirname, 'views'));
 
 // Empty string to contain the output from AI
@@ -32,13 +33,13 @@ var output = "..\public\images\cow-walking.gif";
 var artist = "";
 var noun = "";
 var result = "";
-var spendTwoCents = 0;
+var spendTwoCents = 1;
 
 
 // Creat the prompt given an adjective
 function generatePrompt() {
     artist = artists[Math.floor(Math.random()*artists.length)];
-    noun = nouns[Math.floor(Math.random()*artists.length)];
+    noun = nouns[Math.floor(Math.random()*nouns.length)];
 
     return artist + " painting of a " + noun;
 }
@@ -65,6 +66,12 @@ app.get("/image", function(req, res) {
         nouns: nouns,
         artists: artists,
         result: result,
+    });
+});
+
+app.get("/about", function(req, res) {
+    res.render("about", {
+
     });
 });
 
@@ -103,6 +110,8 @@ app.post("/", async function(req, res) {
 app.post("/image", function(req, res) {
     if (req.body.artist == artist && req.body.noun == noun) {
         result = "Huzzah! You did it."
+    } else if (req.body.artist == "none" || req.body.noun == "none") {
+        result = "Please select a choice for each."
     } else {
         result = ("Sorry, Artist: " + artist + " Noun: " + noun);
     }
@@ -110,6 +119,8 @@ app.post("/image", function(req, res) {
     res.redirect("/image");
 });
 
+// Listen on the port found in the .env file
+// for whatever machine is running this.
 app.listen(PORT, function() {
     console.log("Server running on port " + PORT);
 });
