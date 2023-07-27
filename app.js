@@ -2,6 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 require('dotenv').config();
+const path = require('path');
+
+// hosting services wont have same port as you
+const PORT = process.env.PORT || 3000;
 
 // import { Configuration, OpenAIApi } from "openai";
 const Configuration = require("openai").Configuration;
@@ -19,7 +23,9 @@ app.set('view engine', 'ejs');
 // Allow the app to parse the bodies of res's
 app.use(bodyParser.urlencoded({extended: true}));
 // give access to static files such as stylesheets
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.set('views', path.join(__dirname, 'views'));
 
 // Empty string to contain the output from AI
 var output = "..\public\images\cow-walking.gif";
@@ -104,6 +110,6 @@ app.post("/image", function(req, res) {
     res.redirect("/image");
 });
 
-app.listen(3000, function() {
-    console.log("Server running on port 3000!");
+app.listen(PORT, function() {
+    console.log("Server running on port " + PORT);
 });
