@@ -48,7 +48,7 @@ function generatePrompt() {
 // of the API. It contains information
 // such as the API key.
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: (process.env.OPENAI_API_KEY || API_KEY),
 });
 // creat an instance of the API
 const openai = new OpenAIApi(configuration);
